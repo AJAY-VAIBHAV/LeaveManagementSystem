@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+   <title>Leave Management System</title>
+   <meta name="username" content={{username}}>
+</head>
+
+<body>
+   <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+      <a class="navbar-brand" href="#">Leave Management System</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+         <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="collapsibleNavbar">
+         <ul class="navbar-nav">
+            <li class="nav-item">
+               <a class="nav-link" href="/">Logout</a>
+            </li>
+         </ul>
+      </div>
+   </nav>
+   {% if log %}
+   <h1>Leave Log</h1>
+   <table class="table table-hover" style="width:90%">
+      <thead class="thead-light" align="center">
+         <th>Leave ID</th>
+         <th>Start Date</th>
+         <th>End Date</th>
+         <th>Reason</th>
+         <th>Type</th>
+         <th>Apply Date</th>
+         <th>Approved Date</th>
+         <th>Status</th>
+      </thead>
+      {% for entry in log%}
+      <tr align="center">
+         <td>
+            {{entry[0]}}
+         </td>
+         <td>
+            {{entry[1]}}
+         </td>
+         <td>
+            {{entry[2]}}
+         </td>
+         <td>
+            {{entry[3]}}
+         </td>
+         <td>
+            {{entry[4]}}
+         </td>
+         <td>
+            {{entry[6]}}
+         </td>
+         <td>
+            {{entry[7]}}
+         </td>
+         <td>
+            {{entry[5]}}
+         </td>
+      </tr>
+
+      {% endfor %}
+   </table>
+   {% endif %}
+   <center>
+      <h1>Leave Application Form</h1>
+   </center>
+   <form method="POST" action="/leaveapplied/{{username}}" onsubmit="return(validateMyForm());" class="was-validated">
+      <div class="form-group">
+         <label for="uname">Start Date:</label>
+         <input type="date" class="form-control" id="stdate" placeholder="Enter Start Date" name="stdate" required>
+         <div class="valid-feedback">Valid.</div>
+         <div class="invalid-feedback">Please fill out this field.</div>
+      </div>
+      <div class="form-group">
+         <label for="pwd">End Date</label>
+         <input type="date" class="form-control" id="endate" placeholder="Enter End Date" name="endate" required>
+         <div class="valid-feedback">Valid.</div>
+         <div class="invalid-feedback">Please fill out this field.</div>
+      </div>
+      <div class="form-group">
+         <label for="pwd">Type</label>
+         <input type="text" class="form-control" id="lvtype" placeholder="PL\SL\CL" name="lvtype" required>
+         <div class="valid-feedback">Valid.</div>
+         <div class="invalid-feedback">Please fill out this field.</div>
+      </div>
+      <div class="form-group">
+         <label for="pwd">Reason</label>
+         <input type="text" class="form-control" id="reason" placeholder="Enter reason for leave" name="reason"
+            required>
+         <div class="valid-feedback">Valid.</div>
+         <div class="invalid-feedback">Please fill out this field.</div>
+      </div>
+      <script>
+         function validateMyForm() {
+            if (!DateCheck() || !TypeCheck()) {
+               alert("Validation Failed");
+               return false;
+            }
+
+            alert("Leave has been applied Successfully!");
+            return true;
+         }
+         function DateCheck() {
+            var StartDate = document.getElementById('stdate').value;
+            var EndDate = document.getElementById('endate').value;
+            console.log(StartDate); console.log(EndDate);
+            var eDate = new Date(EndDate);
+            var sDate = new Date(StartDate);
+            today = new Date();
+            var cDate = new Date(today.getFullYear(), today.getMonth(), today.getDay() - 1);
+            console.log(cDate);
+            if (sDate < cDate) {
+               alert("You have entered an old date.");
+               return false;
+            }
+            if (StartDate != '' && StartDate != '' && sDate > eDate) {
+               alert("Please ensure that the End Date is greater than or equal to the Start Date.");
+               return false;
+            }
+            return true;
+         }
+         function TypeCheck() {
+            var Ltype = document.getElementById('lvtype').value;
+            Ltype = Ltype.toLowerCase();
+            if (Ltype == 'pl' || Ltype == 'sl' || Ltype == 'cl') {
+               return true;
+            }
+            alert("Please type the correct type");
+            return false;
+         }
+      </script>
+      <center>
+         <button type="submit" class="btn btn-primary">Submit</button>
+      </center>
+   </form>
+</body>
+
+</html>

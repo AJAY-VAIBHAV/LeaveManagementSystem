@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<title>Leave Management System</title>
+	<meta name="username" content={{username}}>
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+		<a class="navbar-brand" href="#">Leave Management System</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="collapsibleNavbar">
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<a class="nav-link" href="/">Logout</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	{% if lvpend %}
+	<h1>Pending Leaves</h1>
+	<table class="table table-hover" style="width:90%">
+		<thead class="thead-light" align="center">
+			<th>Leave ID</th>
+			<th>Start Date</th>
+			<th>End Date</th>
+			<th>Reason</th>
+			<th>Type</th>
+			<th>Apply Date</th>
+			<th>Status</th>
+			<th>Action</th>
+		</thead>
+		{% for entry in lvpend%}
+		<tr align="center">
+			<td>
+				{{entry[0]}}
+			</td>
+			<td>
+				{{entry[1]}}
+			</td>
+			<td>
+				{{entry[2]}}
+			</td>
+			<td>
+				{{entry[3]}}
+			</td>
+			<td>
+				{{entry[4]}}
+			</td>
+			<td>
+				{{entry[6]}}
+			</td>
+			<td>
+				{{entry[5]}}
+			</td>
+			<td>
+				<button type="button" onClick="ApproveLeave(this.id)" class="btn btn-success" id={{entry[0]}}	name="approve">Approve</button>
+				<button onClick="RejectLeave(this.id)" type="button" class="btn btn-danger" id={{entry[0]}} name="reject">Reject</button>
+			</td>
+			<script>
+				function ApproveLeave(id) {
+					console.log(id)
+					var urll = '/leave/{{username}}/approve';
+					console.log(urll);
+				$.ajax({
+					type: "POST",
+					url: urll,
+					dataType: "json",
+					data: JSON.stringify(id),
+					contentType: 'application/json;charset=UTF-8',
+						success: function (data) {
+							console.log(data);
+						}
+				});
+				};
+				function RejectLeave(id) {
+					console.log(id)
+					var urll = '/leave/{{username}}/reject';
+					console.log(urll);
+				$.ajax({
+					type: "POST",
+					url: urll,
+					dataType: "json",
+					data: JSON.stringify(id),
+					contentType: 'application/json;charset=UTF-8',
+						success: function (data) {
+							console.log(data);
+						}
+				});
+				};
+			</script>
+		</tr>
+		{% endfor %}
+	</table>
+	{% endif %}
+	<!-- <script>location.reload()</script>  -->
+</body>
+
+</html>
